@@ -13,6 +13,10 @@
             e.preventDefault();
         }
     });
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault(); // Prevent the default context menu
+        location.reload(); // Refresh the page
+    });
     </script>
 </head>
 <body class="bg-black text-white">
