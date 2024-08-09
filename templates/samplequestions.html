@@ -3,8 +3,407 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="/static/css//output.css" rel="stylesheet">
 </head>
-<body>
-    
+<body class="bg-black text-white">
+    <!-- Navbar -->
+    <header class="text-white bg-black body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <nav class="flex lg:w-2/5 flex-wrap items-center text-base md:ml-auto">
+                <button
+                    class="mr-5  hover:cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+                    <span
+                        class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"><a href="{{ url_for('samplequestions') }}">Sample
+                        Questions</a></span>
+                </button>
+                <button
+                    class="mr-5  hover:cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+                    <span
+                        class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"><a href="{{ url_for('testrules') }}">Test Rules</a>
+                        </span>
+                </button>
+                <button
+                    class="mr-5  hover:cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+                    <span
+                        class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"><a href="{{ url_for('about') }}">About Test</a>
+                        </span>
+                </button>
+            </nav>
+
+            <a  href="/"class="flex title-font font-medium items-center md:justify-start justify-center text-white">
+                <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-10 h-10 text-white p-2 bg-black rounded-full"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"></path>
+                </svg>
+                <span class="ml-3 text-xl">SST Testing Platform</span>
+            </a>
+            <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
+                <button type="button"
+                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 mt-4 md:mt-0 inline-flex items-center"><a href="{{ url_for('maintest') }}">Start Test</a>
+                    </button>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <div class="container mx-auto my-8">
+        <h1 class="text-3xl font-bold mb-4 text-center">Sample Questions</h1>
+
+        <!-- Display Score -->
+        {% if score is not none %}
+        <div class="text-center mb-4">
+            <p class="text-xl font-semibold">Your Score: <span class="text-blue-600">{{ score }}</span></p>
+        </div>
+        {% endif %}
+        
+        <form method="POST">
+            <!-- Question 1 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">1. What is the capital of France?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question1 == 'Berlin' and selected_answers.question1 == correct_answers.question1 else '' }}">
+                            <input type="radio" name="question1" value="Berlin" class="mr-2" {{ 'checked' if selected_answers.question1 == 'Berlin' else '' }}>
+                            Berlin
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question1 == 'Madrid' and selected_answers.question1 == correct_answers.question1 else '' }}">
+                            <input type="radio" name="question1" value="Madrid" class="mr-2" {{ 'checked' if selected_answers.question1 == 'Madrid' else '' }}>
+                            Madrid
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question1 == 'Paris' and selected_answers.question1 == correct_answers.question1 else '' }}">
+                            <input type="radio" name="question1" value="Paris" class="mr-2" {{ 'checked' if selected_answers.question1 == 'Paris' else '' }}>
+                            Paris
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question1 == 'Rome' and selected_answers.question1 == correct_answers.question1 else '' }}">
+                            <input type="radio" name="question1" value="Rome" class="mr-2" {{ 'checked' if selected_answers.question1 == 'Rome' else '' }}>
+                            Rome
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question1 %}
+                <p class="mt-3">You selected: {{ selected_answers.question1 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 2 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">2. Which element has the chemical symbol 'O'?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question2 == 'Oxygen' and selected_answers.question2 == correct_answers.question2 else '' }}">
+                            <input type="radio" name="question2" value="Oxygen" class="mr-2" {{ 'checked' if selected_answers.question2 == 'Oxygen' else '' }}>
+                            Oxygen
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question2 == 'Gold' and selected_answers.question2 == correct_answers.question2 else '' }}">
+                            <input type="radio" name="question2" value="Gold" class="mr-2" {{ 'checked' if selected_answers.question2 == 'Gold' else '' }}>
+                            Gold
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question2 == 'Silver' and selected_answers.question2 == correct_answers.question2 else '' }}">
+                            <input type="radio" name="question2" value="Silver" class="mr-2" {{ 'checked' if selected_answers.question2 == 'Silver' else '' }}>
+                            Silver
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question2 == 'Hydrogen' and selected_answers.question2 == correct_answers.question2 else '' }}">
+                            <input type="radio" name="question2" value="Hydrogen" class="mr-2" {{ 'checked' if selected_answers.question2 == 'Hydrogen' else '' }}>
+                            Hydrogen
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question2 %}
+                <p class="mt-3">You selected: {{ selected_answers.question2 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 3 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">3. Which political system is characterized by the concentration of power in a single leader or party without constitutional limits?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question3 == 'Federalism' and selected_answers.question3 == correct_answers.question3 else '' }}">
+                            <input type="radio" name="question3" value="Federalism" class="mr-2" {{ 'checked' if selected_answers.question3 == 'Federalism' else '' }}>
+                            Federalism
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question3 == 'Constitutional Monarchy' and selected_answers.question3 == correct_answers.question3 else '' }}">
+                            <input type="radio" name="question3" value="Constitutional Monarchy" class="mr-2" {{ 'checked' if selected_answers.question3 == 'Constitutional Monarchy' else '' }}>
+                            Constitutional Monarchy
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question3 == 'Authoritarianism' and selected_answers.question3 == correct_answers.question3 else '' }}">
+                            <input type="radio" name="question3" value="Authoritarianism" class="mr-2" {{ 'checked' if selected_answers.question3 == 'Authoritarianism' else '' }}>
+                            Authoritarianism
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question3 == 'Parliamentary Democracy' and selected_answers.question3 == correct_answers.question3 else '' }}">
+                            <input type="radio" name="question3" value="Parliamentary Democracy" class="mr-2" {{ 'checked' if selected_answers.question3 == 'Parliamentary Democracy' else '' }}>
+                            Parliamentary Democracy
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question3 %}
+                <p class="mt-3">You selected: {{ selected_answers.question3 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 4 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">4. Which technology is foundational to the development of modern quantum computers?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question4 == 'Artificial Intelligence' and selected_answers.question4 == correct_answers.question4 else '' }}">
+                            <input type="radio" name="question4" value="Artificial Intelligence" class="mr-2" {{ 'checked' if selected_answers.question4 == 'Artificial Intelligence' else '' }}>
+                            Artificial Intelligence
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question4 == 'Quantum Entanglement' and selected_answers.question4 == correct_answers.question4 else '' }}">
+                            <input type="radio" name="question4" value="Quantum Entanglement" class="mr-2" {{ 'checked' if selected_answers.question4 == 'Quantum Entanglement' else '' }}>
+                            Quantum Entanglement
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question4 == 'Cloud Computing' and selected_answers.question4 == correct_answers.question4 else '' }}">
+                            <input type="radio" name="question4" value="Cloud Computing" class="mr-2" {{ 'checked' if selected_answers.question4 == 'Cloud Computing' else '' }}>
+                            Cloud Computing
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question4 == 'Blockchain' and selected_answers.question4 == correct_answers.question4 else '' }}">
+                            <input type="radio" name="question4" value="Blockchain" class="mr-2" {{ 'checked' if selected_answers.question4 == 'Blockchain' else '' }}>
+                            Blockchain
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question4 %}
+                <p class="mt-3">You selected: {{ selected_answers.question4 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 5 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">5. What is the primary cause of ocean acidification?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question5 == 'Increased use of plastic products' and selected_answers.question5 == correct_answers.question5 else '' }}">
+                            <input type="radio" name="question5" value="Increased use of plastic products" class="mr-2" {{ 'checked' if selected_answers.question5 == 'Increased use of plastic products' else '' }}>
+                            Increased use of plastic products
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question5 == 'Overfishing and marine pollution' and selected_answers.question5 == correct_answers.question5 else '' }}">
+                            <input type="radio" name="question5" value="Overfishing and marine pollution" class="mr-2" {{ 'checked' if selected_answers.question5 == 'Overfishing and marine pollution' else '' }}>
+                            Overfishing and marine pollution
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question5 == 'Absorption of excess atmospheric CO2' and selected_answers.question5 == correct_answers.question5 else '' }}">
+                            <input type="radio" name="question5" value="Absorption of excess atmospheric CO2" class="mr-2" {{ 'checked' if selected_answers.question5 == 'Absorption of excess atmospheric CO2' else '' }}>
+                            Absorption of excess atmospheric CO2
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question5 == 'Destruction of mangrove forests' and selected_answers.question5 == correct_answers.question5 else '' }}">
+                            <input type="radio" name="question5" value="Destruction of mangrove forests" class="mr-2" {{ 'checked' if selected_answers.question5 == 'Destruction of mangrove forests' else '' }}>
+                            Destruction of mangrove forests
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question5 %}
+                <p class="mt-3">You selected: {{ selected_answers.question5 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 6 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">6. The concept of "soft power" in international relations primarily refers to:</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question6 == 'Military strength and economic influence' and selected_answers.question6 == correct_answers.question6 else '' }}">
+                            <input type="radio" name="question6" value="Military strength and economic influence" class="mr-2" {{ 'checked' if selected_answers.question6 == 'Military strength and economic influence' else '' }}>
+                            Military strength and economic influence
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question6 == 'Diplomatic negotiations and treaties' and selected_answers.question6 == correct_answers.question6 else '' }}">
+                            <input type="radio" name="question6" value="Diplomatic negotiations and treaties" class="mr-2" {{ 'checked' if selected_answers.question6 == 'Diplomatic negotiations and treaties' else '' }}>
+                            Diplomatic negotiations and treaties
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question6 == 'Cultural influence and attractiveness' and selected_answers.question6 == correct_answers.question6 else '' }}">
+                            <input type="radio" name="question6" value="Cultural influence and attractiveness" class="mr-2" {{ 'checked' if selected_answers.question6 == 'Cultural influence and attractiveness' else '' }}>
+                            Cultural influence and attractiveness
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question6 == 'Coercive actions and economic sanctions' and selected_answers.question6 == correct_answers.question6 else '' }}">
+                            <input type="radio" name="question6" value="Coercive actions and economic sanctions" class="mr-2" {{ 'checked' if selected_answers.question6 == 'Coercive actions and economic sanctions' else '' }}>
+                            Coercive actions and economic sanctions
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question6 %}
+                <p class="mt-3">You selected: {{ selected_answers.question6 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 7 -->
+            <div class=" bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">7. The theory of continental drift, which proposes that continents were once connected and have since drifted apart, was first proposed by:</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question7 == 'Alfred Wegener' and selected_answers.question7 == correct_answers.question7 else '' }}">
+                            <input type="radio" name="question7" value="Alfred Wegener" class="mr-2" {{ 'checked' if selected_answers.question7 == 'Alfred Wegener' else '' }}>
+                            Alfred Wegener
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question7 == 'Charles Lyell' and selected_answers.question7 == correct_answers.question7 else '' }}">
+                            <input type="radio" name="question7" value="Charles Lyell" class="mr-2" {{ 'checked' if selected_answers.question7 == 'Charles Lyell' else '' }}>
+                            Charles Lyell
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question7 == 'James Hutton' and selected_answers.question7 == correct_answers.question7 else '' }}">
+                            <input type="radio" name="question7" value="James Hutton" class="mr-2" {{ 'checked' if selected_answers.question7 == 'James Hutton' else '' }}>
+                            James Hutton
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question7 == 'Henry Hess' and selected_answers.question7 == correct_answers.question7 else '' }}">
+                            <input type="radio" name="question7" value="Henry Hess" class="mr-2" {{ 'checked' if selected_answers.question7 == 'Henry Hess' else '' }}>
+                            Henry Hess
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question7 %}
+                <p class="mt-3">You selected: {{ selected_answers.question7 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 8 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">8. What was the primary economic impact of the Treaty of Versailles on Germany after World War I?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question8 == 'It led to the economic revitalization of Germany.
+                        ' and selected_answers.question8 == correct_answers.question8 else '' }}">
+                            <input type="radio" name="question8" value="It led to the economic revitalization of Germany.
+                            " class="mr-2" {{ 'checked' if selected_answers.question8 == 'It led to the economic revitalization of Germany.
+                            ' else '' }}>
+                            It led to the economic revitalization of Germany.
+
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question8 == 'It imposed severe reparations, leading to hyperinflation and economic hardship.' and selected_answers.question8 == correct_answers.question8 else '' }}">
+                            <input type="radio" name="question8" value="It imposed severe reparations, leading to hyperinflation and economic hardship." class="mr-2" {{ 'checked' if selected_answers.question8 == 'It imposed severe reparations, leading to hyperinflation and economic hardship.' else '' }}>
+                            It imposed severe reparations, leading to hyperinflation and economic hardship.
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question8 == 'It resulted in the establishment of a new currency, stabilizing the economy.' and selected_answers.question8 == correct_answers.question8 else '' }}">
+                            <input type="radio" name="question8" value="It resulted in the establishment of a new currency, stabilizing the economy." class="mr-2" {{ 'checked' if selected_answers.question8 == 'It resulted in the establishment of a new currency, stabilizing the economy.' else '' }}>
+                            It resulted in the establishment of a new currency, stabilizing the economy.
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question8 == 'It led to an economic boom due to new trade agreements.' and selected_answers.question8 == correct_answers.question8 else '' }}">
+                            <input type="radio" name="question8" value="It led to an economic boom due to new trade agreements." class="mr-2" {{ 'checked' if selected_answers.question8 == 'It led to an economic boom due to new trade agreements.' else '' }}>
+                            It led to an economic boom due to new trade agreements.
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question8 %}
+                <p class="mt-3">You selected: {{ selected_answers.question8 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 9 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">9. Which organization is primarily responsible for coordinating international public health efforts and addressing global health emergencies?</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question9 == 'World Health Organization (WHO)' and selected_answers.question9 == correct_answers.question9 else '' }}">
+                            <input type="radio" name="question9" value="World Health Organization (WHO)" class="mr-2" {{ 'checked' if selected_answers.question9 == 'World Health Organization (WHO)' else '' }}>
+                            World Health Organization (WHO)
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question9 == 'Centers for Disease Control and Prevention (CDC)' and selected_answers.question9 == correct_answers.question9 else '' }}">
+                            <input type="radio" name="question9" value="Centers for Disease Control and Prevention (CDC)" class="mr-2" {{ 'checked' if selected_answers.question9 == 'Centers for Disease Control and Prevention (CDC)' else '' }}>
+                            Centers for Disease Control and Prevention (CDC)
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question9 == 'Médecins Sans Frontières (Doctors Without Borders)' and selected_answers.question9 == correct_answers.question9 else '' }}">
+                            <input type="radio" name="question9" value="Médecins Sans Frontières (Doctors Without Borders)" class="mr-2" {{ 'checked' if selected_answers.question9 == 'Médecins Sans Frontières (Doctors Without Borders)' else '' }}>
+                            Médecins Sans Frontières (Doctors Without Borders)
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question9 == 'Global Fund to Fight AIDS, Tuberculosis, and Malaria' and selected_answers.question9 == correct_answers.question9 else '' }}">
+                            <input type="radio" name="question9" value="Global Fund to Fight AIDS, Tuberculosis, and Malaria" class="mr-2" {{ 'checked' if selected_answers.question9 == 'Global Fund to Fight AIDS, Tuberculosis, and Malaria' else '' }}>
+                            Global Fund to Fight AIDS, Tuberculosis, and Malaria
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question9 %}
+                <p class="mt-3">You selected: {{ selected_answers.question9 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Question 10 -->
+            <div class="bg-black p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-semibold mb-3">10. The principle of "separation of powers" in a democratic government refers to:</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question10 == 'Division of governmental authority into different branches to prevent abuse of power' and selected_answers.question10 == correct_answers.question10 else '' }}">
+                            <input type="radio" name="question10" value="Division of governmental authority into different branches to prevent abuse of power" class="mr-2" {{ 'checked' if selected_answers.question10 == 'Division of governmental authority into different branches to prevent abuse of power' else '' }}>
+                            Division of governmental authority into different branches to prevent abuse of power
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question10 == 'Allocation of resources between federal and state governments' and selected_answers.question10 == correct_answers.question10 else '' }}">
+                            <input type="radio" name="question10" value="Allocation of resources between federal and state governments" class="mr-2" {{ 'checked' if selected_answers.question10 == 'Allocation of resources between federal and state governments' else '' }}>
+                            Allocation of resources between federal and state governments
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question10 == 'Distinction between judicial and executive functions' and selected_answers.question10 == correct_answers.question10 else '' }}">
+                            <input type="radio" name="question10" value="Distinction between judicial and executive functions" class="mr-2" {{ 'checked' if selected_answers.question10 == 'Distinction between judicial and executive functions' else '' }}>
+                            Distinction between judicial and executive functions
+                        </label>
+                    </li>
+                    <li>
+                        <label class="{{ 'text-green-600' if selected_answers.question10 == 'Differentiation between civil and criminal laws' and selected_answers.question10 == correct_answers.question10 else '' }}">
+                            <input type="radio" name="question10" value="Differentiation between civil and criminal laws" class="mr-2" {{ 'checked' if selected_answers.question10 == 'Differentiation between civil and criminal laws' else '' }}>
+                            Differentiation between civil and criminal laws
+                        </label>
+                    </li>
+                </ul>
+                {% if selected_answers.question10 %}
+                <p class="mt-3">You selected: {{ selected_answers.question10 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Submit</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
