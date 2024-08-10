@@ -1,98 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Test</title>
     <link href="/static/css/output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@1.2.0/dist/face-api.min.js"></script>
+    <script src="/static/js/app.js"></script>
+
     <style>
         /* Additional custom styles if needed */
         .disabled {
             pointer-events: none;
             opacity: 0.6;
-            background-color: #e0e0e0; /* Optional: Add a background color to indicate disable state */
+            background-color: #e0e0e0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            border: 2px solid #333;
+            border-radius: 8px;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 p-6">
     <div class="container mx-auto max-w-4xl bg-white p-8 rounded-lg shadow-lg mt-10">
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 hover:text-emerald-500 transition-colors duration-300">Main Test</h1>
-        
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 hover:text-emerald-500 transition-colors duration-300">
+            Main Test</h1>
+
         <div id="details-section" class="mb-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Enter Your Details to Start the Test</h2>
             <form id="details-form" class="space-y-4" onsubmit="return startCameraAndTest()">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="flex flex-col">
                         <label for="name" class="text-lg font-medium text-gray-600 mb-1">Name:</label>
-                        <input type="text" id="name" name="name" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300" required>
+                        <input type="text" id="name" name="name"
+                            class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+                            required>
                     </div>
-                    
+
                     <div class="flex flex-col">
                         <label for="email" class="text-lg font-medium text-gray-600 mb-1">Email:</label>
-                        <input type="email" id="email" name="email" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300" required>
+                        <input type="email" id="email" name="email"
+                            class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+                            required>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="flex flex-col">
                         <label for="age" class="text-lg font-medium text-gray-600 mb-1">Age:</label>
-                        <input type="number" id="age" name="age" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300" required>
+                        <input type="number" id="age" name="age"
+                            class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+                            required>
                     </div>
-                    
+
                     <div class="flex flex-col">
                         <label for="mobile" class="text-lg font-medium text-gray-600 mb-1">Mobile Number:</label>
-                        <input type="tel" id="mobile" name="mobile" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300" pattern="[0-9]{10}" required>
+                        <input type="tel" id="mobile" name="mobile"
+                            class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+                            pattern="[0-9]{10}" required>
                     </div>
                 </div>
 
                 <div class="flex flex-col">
                     <label for="dob" class="text-lg font-medium text-gray-600 mb-1">Test Taken On Date:</label>
-                    <input type="date" id="dob" name="dob" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300" required>
+                    <input type="date" id="dob" name="dob"
+                        class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+                        required>
                 </div>
-                
-                <button type="button" onclick="startCameraAndTest()" class="bg-blue-500 text-white p-2 rounded">Start Test</button>
+
+                <button type="button" onclick="startCameraAndTest()" class="bg-blue-500 text-white p-2 rounded">Start
+                    Test</button>
             </form>
         </div>
         <div id="test-section" class="hidden">
             <h2 class="text-xl font-semibold mb-4">Test Questions</h2>
             <div id="timer" class="text-red-500 font-semibold mb-4"></div>
             <div id="questions-container"></div>
-            <button type="button" onclick="submitTest()" class="bg-green-500 text-white p-2 rounded mt-4">Submit Test</button>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold">Camera Feed</h3>
+                <video id="video" autoplay></video>
+            </div>
+            <button type="button" onclick="submitTest()" class="bg-green-500 text-white p-2 rounded mt-4">Submit
+                Test</button>
         </div>
 
         <div id="results-section" class="hidden">
             <h2 class="text-xl font-semibold mb-4">Test Results</h2>
             <p id="score"></p>
             <p id="correct-answers"></p>
-            <button class="bg-blue-500 text-white p-2 rounded mt-4"><a href="{{ url_for('homee') }}">Go to Home Page</a></button>
+            <button class="bg-blue-500 text-white p-2 rounded mt-4"><a href="{{ url_for('homee') }}">Go to Home
+                    Page</a></button>
         </div>
     </div>
-
+    <div id="camera-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Allow Camera Access</h2>
+            <p class="mb-4">We need access to your camera to monitor the test. Please allow access.</p>
+            <button onclick="startCamera()" class="bg-blue-500 text-white p-2 rounded">Allow Camera Access</button>
+            <button onclick="closeCameraModal()" class="bg-red-500 text-white p-2 rounded mt-4">Cancel</button>
+        </div>
+    </div>
+   
     <script>
-        let questions = [];
-        let userAnswers = {};
-        const timeLimit = 3600000; // 1 hour in milliseconds
-        let timer;
-        let testStarted = false; // Initialize testStarted
-        const homeUrl = "{{ url_for('homee') }}"; // Flask-provided URL
-        async function fetchQuestions() {
-            try {
-                const response = await fetch('/static/questions.json'); // Ensure this path is correct
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                questions = data.questions;
-                renderQuestions();
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-            }
-        }
+        
+let questions = [];
+let userAnswers = {};
+const timeLimit = 3600000; // 1 hour in milliseconds
+let timer;
+let testStarted = false;
+const homeUrl = "{{ url_for('homee') }}";
+async function fetchQuestions() {
+    try {
+        const response = await fetch('/static/questions.json');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        questions = data.questions;
+        renderQuestions();
+    } catch (error) {
+        console.error('Error fetching questions:', error);
+    }
+}
 
-        function renderQuestions() {
-            const container = document.getElementById('questions-container');
-            container.innerHTML = ''; // Clear previous questions
+function renderQuestions() {
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
 
-            questions.forEach((question, index) => {
-                const questionHtml = `
+    questions.forEach((question, index) => {
+        const questionHtml = `
                     <div class="mb-4">
                         <p class="font-semibold mb-2">${index + 1}. ${question.text}</p>
                         ${question.options.map((option, i) => `
@@ -103,125 +171,208 @@
                         `).join('')}
                     </div>
                 `;
-                container.innerHTML += questionHtml;
-            });
-        }
+        container.innerHTML += questionHtml;
+    });
+}
 
-        function startTimer() {
-            const endTime = Date.now() + timeLimit;
-            const timerElement = document.getElementById('timer');
+function startTimer() {
+    const endTime = Date.now() + timeLimit;
+    const timerElement = document.getElementById('timer');
 
-            timer = setInterval(() => {
-                const timeLeft = endTime - Date.now();
+    timer = setInterval(() => {
+        const timeLeft = endTime - Date.now();
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    timerElement.textContent = "Time's up!";
-                    submitTest(); // Automatically submit the test when time is up
-                } else {
-                    const minutes = Math.floor(timeLeft / 60000);
-                    const seconds = Math.floor((timeLeft % 60000) / 1000);
-                    timerElement.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                }
-            }, 1000);
-        }
-
-        async function startCameraAndTest() {
-        const form = document.getElementById('details-form');
-        if (form.checkValidity()) {
-            const formData = new FormData(form);
-            
-            try {
-                const response = await fetch('/submit-form', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-
-                if (result.status === 'error') {
-                    alert(result.message); // Show the warning message
-                } else if (result.status === 'success') {
-                    console.log(result.message);
-                    document.getElementById('details-section').classList.add('hidden');
-                    document.getElementById('test-section').classList.remove('hidden');
-                    fetchQuestions();
-                    startTimer();
-                    testStarted = true; // Set testStarted to true
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            timerElement.textContent = "Time's up!";
+            submitTest();
         } else {
-            form.reportValidity();
+            const minutes = Math.floor(timeLeft / 60000);
+            const seconds = Math.floor((timeLeft % 60000) / 1000);
+            timerElement.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    }, 1000);
+}
+
+async function startCameraAndTest() {
+    const form = document.getElementById('details-form');
+    if (form.checkValidity()) {
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/submit-form', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.status === 'error') {
+                alert(result.message);
+            } else if (result.status === 'success') {
+                console.log(result.message);
+                document.getElementById('details-section').classList.add('hidden');
+                document.getElementById('test-section').classList.remove('hidden');
+                fetchQuestions();
+                startTimer();
+                openCameraModal();
+                closeCameraModal();
+                startCamera();
+                testStarted = true;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    } else {
+        form.reportValidity();
+    }
+}
+async function loadModels() {
+    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+    await faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models');
+    await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+}
+async function detectGaze(video) {
+    const options = new faceapi.TinyFaceDetectorOptions();
+    const result = await faceapi.detectSingleFace(video, options).withFaceLandmarks(true);
+
+    if (result) {
+        const landmarks = result.landmarks;
+        const leftEye = landmarks.getLeftEye();
+        const rightEye = landmarks.getRightEye();
+
+        const isLookingAway = checkIfLookingAway(leftEye, rightEye);
+
+        if (isLookingAway) {
+            alert("Please pay attention to the test!");
         }
     }
+}
 
-        function submitTest() {
-            userAnswers = {};
-            let atLeastOneAnswered = false;
-            questions.forEach((_, index) => {
-                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selectedOption) {
-                    userAnswers[`question${index}`] = selectedOption.value;
-                    atLeastOneAnswered = true;
-                }
-            });
+function checkIfLookingAway(leftEye, rightEye) {
+    // Here you could add your logic to check the eye positions
+    // For example, if eyes are looking significantly to the sides, user might be looking away
+    const leftEyeCenter = leftEye.reduce((sum, p) => sum.add(p), faceapi.Point(0, 0)).div(leftEye.length);
+    const rightEyeCenter = rightEye.reduce((sum, p) => sum.add(p), faceapi.Point(0, 0)).div(rightEye.length);
 
-            if (!atLeastOneAnswered) {
-                alert('You must answer at least one question before submitting.');
-                return;
-            }
+    const eyeDistance = leftEyeCenter.sub(rightEyeCenter).magnitude();
 
-            calculateResults();
+    // Adjust these thresholds based on your testing
+    const isLookingAway = eyeDistance < 20 || eyeDistance > 100;
+
+    return isLookingAway;
+}
+async function startGazeDetection(video) {
+    loadModels().then(() => {
+        setInterval(async () => {
+            await detectGaze(video);
+        }, 1000); // Check every second
+    });
+}
+
+function openCameraModal() {
+    document.getElementById('camera-modal').style.display = 'flex';
+}
+
+function closeCameraModal() {
+    document.getElementById('camera-modal').style.display = 'none';
+}
+
+async function startCamera() {
+    const video = document.getElementById('video');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+
+        document.getElementById('camera-modal').style.display = 'none';
+        startCameraAndTest();
+
+        // Start gaze detection
+        startGazeDetection(video);
+
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        alert('Unable to access the camera. Please ensure that the browser has permission to access the camera.');
+    }
+}
+
+function submitTest() {
+    userAnswers = {};
+    let atLeastOneAnswered = false;
+    questions.forEach((_, index) => {
+        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+        if (selectedOption) {
+            userAnswers[`question${index}`] = selectedOption.value;
+            atLeastOneAnswered = true;
         }
+    });
 
-        function calculateResults() {
-            const correctAnswers = questions.map(q => q.answer);
-            let score = 0;
-            let correctCount = 0;
+    if (!atLeastOneAnswered) {
+        alert('You must answer at least one question before submitting.');
+        return;
+    }
 
-            correctAnswers.forEach((answer, index) => {
-                if (userAnswers[`question${index}`] === answer) {
-                    score += 1;
-                    correctCount += 1;
-                }
-            });
+    calculateResults();
+}
 
-            document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
-            document.getElementById('correct-answers').innerHTML = `
+function calculateResults() {
+    const correctAnswers = questions.map(q => q.answer);
+    let score = 0;
+    let correctCount = 0;
+
+    correctAnswers.forEach((answer, index) => {
+        if (userAnswers[`question${index}`] === answer) {
+            score += 1;
+            correctCount += 1;
+        }
+    });
+
+    document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
+    document.getElementById('correct-answers').innerHTML = `
                 Correct Answers:<br>
                 ${questions.map((q, index) => `
                     <strong>Question ${index + 1}:</strong> ${q.answer}<br>
                 `).join('')}
             `;
 
-            document.getElementById('test-section').classList.add('hidden');
-            document.getElementById('results-section').classList.remove('hidden');
-        }
+    document.getElementById('test-section').classList.add('hidden');
+    document.getElementById('results-section').classList.remove('hidden');
+}
 
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', event => {
-            if (event.key === 'F12' || (event.ctrlKey && (event.key === 'u' || event.key === 'U'))) {
-                event.preventDefault();
-            }
-        });
+document.addEventListener('contextmenu', event => event.preventDefault());
 
-        document.addEventListener('visibilitychange', () => {
-            const testSection = document.getElementById('test-section');
-            if (document.hidden && testStarted) {
-                testSection.classList.add('disabled');
-                alert("You have navigated away from the test. You are being redirected to the home page.");
-                window.location.href = homeUrl; // Redirect to the home page
-            } else {
-                testSection.classList.remove('disabled');
-            }
-        });
-        function checkTestAccess() {
-            if (sessionStorage.getItem('test_redirected')) {
-                window.location.href = homeUrl; // Redirect to the home page
-            }
-        }
-        document.addEventListener('DOMContentLoaded', checkTestAccess);
+window.addEventListener('beforeunload', function (e) {
+    if (testStarted) {
+        const confirmationMessage = "If you leave this page, you will lose all progress on the test.";
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    }
+});
+
+function checkTestAccess() {
+    if (sessionStorage.getItem('test_redirected')) {
+        window.location.href = homeUrl;
+    }
+}
+
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('keydown', event => {
+    if (event.key === 'F12' || (event.ctrlKey && (event.key === 'u' || event.key === 'U'))) {
+        event.preventDefault();
+    }
+});
+
+document.addEventListener('visibilitychange', () => {
+    const testSection = document.getElementById('test-section');
+    if (document.hidden && testStarted) {
+        testSection.classList.add('disabled');
+        alert("You have navigated away from the test. You are being redirected to the home page.");
+        window.location.href = homeUrl; // Redirect to the home page
+    } else {
+        testSection.classList.remove('disabled');
+    }
+});
+document.addEventListener('DOMContentLoaded', checkTestAccess);
     </script>
 </body>
+
 </html>
