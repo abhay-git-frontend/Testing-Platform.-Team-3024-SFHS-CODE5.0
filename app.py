@@ -11,13 +11,6 @@ def hello_world():
     return render_template('index.html')
     # return "<p>Hello, World!</p>"
 
-@app.route("/about")
-def about():
-    return render_template('about.html')
-
-@app.route("/testrules")
-def testrules():
-    return render_template('testrules.html')
 
 all_questions = {
     'What is the capital of France?': ['Paris', 'London', 'Rome', 'Berlin'],
