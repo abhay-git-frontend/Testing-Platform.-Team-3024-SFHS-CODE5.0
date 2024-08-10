@@ -9,7 +9,7 @@ Akshit Pundir
 
 All the members have completed their work in their respective areas for this website, and we hope you find it well.
 
-Github ID of all team members
+Github ID of all team members:
 Dhairya123
 Manan1812
 Devyansh0609
