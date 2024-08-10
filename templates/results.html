@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <title>Results</title>
+</head>
+<body class="bg-gray-900 text-white font-inter">
+    <header class="text-white bg-black body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <!-- Navigation and Header Content Here -->
+        </div>
+    </header>
+
+    <section class="text-white bg-gray-800 body-font py-12">
+        <div class="container px-5 py-24 mx-auto">
+            <div class="flex flex-wrap w-full mb-12 flex-col items-center text-center">
+                <h1 class="sm:text-4xl text-3xl font-medium title-font mb-4 text-white">Test Results</h1>
+                <p class="leading-relaxed text-lg">Thank you for taking the test, {{ user_name }}!</p>
+                <p class="text-lg">Your Score: {{ score }}</p>
+
+                <div class="mt-6">
+                    <h2 class="text-2xl font-medium title-font mb-4 text-white">Correct Answers</h2>
+                    <ul>
+                        {% for question_id, answer in correct_answers.items() %}
+                            <li class="mb-2">
+                                <strong>Question {{ question_id }}:</strong> {{ answer }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-white bg-black body-font">
+        <!-- Footer Content Here -->
+    </footer>
+</body>
+</html>

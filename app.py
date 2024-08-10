@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request  
-
+from flask import Flask, render_template, request, url_for, redirect, session
+import json
+import random
 app = Flask(__name__)
+app.secret_key = '47c34e58e179a8a09903c0736da8dd04' 
 
 @app.route("/")
 def hello_world():
@@ -15,36 +17,44 @@ def about():
 def testrules():
     return render_template('testrules.html')
 
+all_questions = {
+    'What is the capital of France?': ['Paris', 'London', 'Rome', 'Berlin'],
+    'What is the chemical symbol for Oxygen?': ['Oxygen', 'Hydrogen', 'Carbon Dioxide', 'Nitrogen'],
+    'Which type of government is characterized by a concentration of power in one leader?': ['Authoritarianism', 'Democracy', 'Communism', 'Monarchy'],
+    'Which concept in physics describes the phenomenon where particles become interconnected regardless of distance?': ['Quantum Entanglement', 'Classical Mechanics', 'String Theory', 'Relativity'],
+    'What is the process by which excess atmospheric CO2 is absorbed?': ['Absorption of excess atmospheric CO2', 'Reduction of CO2 emissions', 'Afforestation', 'Energy conservation'],
+    'Which factor is associated with cultural influence and attractiveness?': ['Cultural influence and attractiveness', 'Economic stability', 'Political freedom', 'Technological advancement'],
+    'Who is known for the theory of continental drift?': ['Alfred Wegener', 'Charles Darwin', 'Isaac Newton', 'Galileo Galilei'],
+    'What was one significant economic impact of the Treaty of Versailles on Germany?': ['It imposed severe reparations, leading to hyperinflation and economic hardship.', 'It led to increased trade and economic growth.', 'It resulted in a stronger military alliance.', 'It had minimal impact on the economy.'],
+    'Which organization is responsible for international public health?': ['World Health Organization (WHO)', 'United Nations (UN)', 'International Monetary Fund (IMF)', 'World Bank'],
+    'What is the purpose of dividing governmental authority into different branches?': ['Division of governmental authority into different branches to prevent abuse of power', 'Establishment of a single governing authority', 'Centralization of economic resources', 'Restriction of political freedoms']
+}
+
 @app.route('/samplequestions', methods=['GET', 'POST'])
 def samplequestions():
-    selected_answers = {}
     correct_answers = {
-        'question1': 'Paris',
-        'question2': 'Oxygen',
-        'question3': 'Authoritarianism',
-        'question4': 'Quantum Entanglement',
-        'question5': 'Absorption of excess atmospheric CO2',
-        'question6': 'Cultural influence and attractiveness',
-        'question7': 'Alfred Wegener',
-        'question8': 'It imposed severe reparations, leading to hyperinflation and economic hardship.',
-        'question9': 'World Health Organization (WHO)',
-        'question10': 'Division of governmental authority into different branches to prevent abuse of power'
+        'What is the capital of France?': 'Paris',
+        'What is the chemical symbol for Oxygen?': 'Oxygen',
+        'Which type of government is characterized by a concentration of power in one leader?': 'Authoritarianism',
+        'Which concept in physics describes the phenomenon where particles become interconnected regardless of distance?': 'Quantum Entanglement',
+        'What is the process by which excess atmospheric CO2 is absorbed?': 'Absorption of excess atmospheric CO2',
+        'Which factor is associated with cultural influence and attractiveness?': 'Cultural influence and attractiveness',
+        'Who is known for the theory of continental drift?': 'Alfred Wegener',
+        'What was one significant economic impact of the Treaty of Versailles on Germany?': 'It imposed severe reparations, leading to hyperinflation and economic hardship.',
+        'Which organization is responsible for international public health?': 'World Health Organization (WHO)',
+        'What is the purpose of dividing governmental authority into different branches?': 'Division of governmental authority into different branches to prevent abuse of power'
     }
+
+    # Shuffle options for each question
+    questions = {q: random.sample(a, len(a)) for q, a in all_questions.items()}
     score = 0
+    selected_answers = {}
 
     if request.method == 'POST':
         # Capture selected answers from the form
         selected_answers = {
-            'question1': request.form.get('question1'),
-            'question2': request.form.get('question2'),
-            'question3': request.form.get('question3'),
-            'question4': request.form.get('question4'),
-            'question5': request.form.get('question5'),
-            'question6': request.form.get('question6'),
-            'question7': request.form.get('question7'),
-            'question8': request.form.get('question8'),
-            'question9': request.form.get('question9'),
-            'question10': request.form.get('question10')
+            q: request.form.get(q)
+            for q in all_questions.keys()
         }
 
         # Calculate score
@@ -54,11 +64,20 @@ def samplequestions():
             else:
                 score -= 1  # Decrease score for wrong answers
 
-    return render_template('samplequestions.html', selected_answers=selected_answers, correct_answers=correct_answers, score=score)
-@app.route('/maintest')
+    return render_template('samplequestions.html', questions=questions, selected_answers=selected_answers, correct_answers=correct_answers, score=score)
+
+
+@app.route('/maintest', methods=['GET', 'POST'])
 def maintest():
+
     return render_template('maintest.html')
+@app.route("/")
+def home():
+    return render_template('index.html')  # Ensure you have an index.html file
 
-
+@app.route('/home')
+def home_redirect():
+    return redirect(url_for('home'))
+        
 if __name__ == "__main__":
     app.run(debug=True)
